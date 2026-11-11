@@ -44,9 +44,9 @@ window.PEPE_CONFIG = {
   },
 
   social: {
-    x: "https://x.com/PepePicture",
+    x: "",//https://x.com/PepePicture//
     xHandle: "@PepePicture",
-    telegram: "", // e.g. "https://t.me/YourGroup" — empty = hidden
+    telegram: "https://t.me/pepes",
   },
 
   /** Supabase: pictures table + Storage bucket for uploads. The anon key is public by design. */
