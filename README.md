@@ -7,6 +7,13 @@ Pictures and uploads are stored in **Supabase** (database + Storage).
 
 Any static host: Hostinger (upload the files to `public_html`), GitHub Pages, Netlify… Locally: `python3 -m http.server` → http://localhost:8000
 
+## Add your pictures
+
+1. Copy images into `pics/<category>/` (`classic`, `rare`, `anime`, `cyber`, `space`, `pixel`, `art`, `crypto`).
+2. Run `node scripts/build-pics.mjs` → writes `data/pics.json` (title from file name, size, category from folder).
+3. Commit + push (or upload to your host). Prefix a file with `featured-` to put it in the hero.
+4. When you have enough of your own, set `gallery.showSamples: false` in `js/config.js`.
+
 ## Configure — `js/config.js`
 
 | Key | Purpose |
@@ -26,7 +33,7 @@ Any static host: Hostinger (upload the files to `public_html`), GitHub Pages, Ne
 
 CAs are shown with the network SVG + copy button + explorer link (header `$PEPES` button and the Token section). Empty CA → "CA coming soon".
 
-## Supabase
+## Supabase (visitor uploads — currently off: `upload.enabled: false`)
 
 1. SQL Editor → run `supabase/schema.sql` (table `pics`, RLS, `like_pic()` function, public Storage bucket `pics`).
 2. SQL Editor → run `supabase/seed.sql` (200 sample pictures).

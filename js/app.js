@@ -75,17 +75,14 @@
   /* ------------------------------------------------------------ data */
   const headers = { apikey: SB.anonKey, Authorization: `Bearer ${SB.anonKey}` };
   let all = [];
+  // pictures from pics/ (data/pics.json) + generated samples while showSamples is on
   async function load() {
-    try {
-      const r = await fetch(`${SB.url}/rest/v1/pics?select=id,slug,title,category,image_url,width,height,tags,creator,featured,is_sample,likes,created_at&status=eq.approved&order=created_at.desc&limit=5000`, { headers });
-      if (!r.ok) throw new Error(r.status);
-      const rows = await r.json();
-      if (!rows.length) throw new Error("empty");
-      return rows;
-    } catch {
-      const r = await fetch("data/samples.json");
-      return (await r.json()).map((p) => ({ ...p, id: null, width: p.w, height: p.h }));
-    }
+    const get = (u) => fetch(u, { cache: "no-cache" }).then((r) => (r.ok ? r.json() : [])).catch(() => []);
+    const [own, samples] = await Promise.all([get("data/pics.json"), C.gallery.showSamples ? get("data/samples.json") : []]);
+    return [
+      ...own.map((p) => ({ ...p, id: null, tags: p.tags || [] })),
+      ...samples.map((p) => ({ ...p, id: null, width: p.w, height: p.h })),
+    ];
   }
 
   /* ------------------------------------------------------------ gallery */
@@ -107,7 +104,7 @@
     a.tabIndex = 0;
     const ratio = `${p.width || 600}/${p.height || 750}`;
     a.innerHTML = `<div class="ph" style="aspect-ratio:${ratio}">${p.featured ? '<span class="badge">Featured</span>' : p.is_sample ? '<span class="badge">Sample</span>' : ""}<img loading="lazy" decoding="async" alt="${esc(p.title)}" src="${esc(p.image_url)}" /></div>
-      <div class="meta"><div style="min-width:0"><div class="t">${esc(p.title)}</div><div class="c">${esc(catName[p.category] || "")}${p.creator && !p.is_sample ? " · " + esc(p.creator) : ""}</div></div><span class="l">♥ ${p.likes}</span></div>`;
+      <div class="meta"><div style="min-width:0"><div class="t">${esc(p.title)}</div><div class="c">${esc(catName[p.category] || "")}${p.creator && !p.is_sample ? " · " + esc(p.creator) : ""}</div></div>${p.id ? `<span class="l">♥ ${p.likes}</span>` : ""}</div>`;
     const img = a.querySelector("img");
     img.onload = () => img.classList.add("ok");
     if (img.complete && img.naturalWidth) img.classList.add("ok");
@@ -180,7 +177,7 @@
     const likeBtn = $("#lbLike");
     likeBtn.textContent = `♥ ${p.likes}`;
     likeBtn.classList.toggle("liked", liked.has(p.slug));
-    likeBtn.disabled = !p.id;
+    likeBtn.hidden = !p.id;
     const dl = $("#lbDl"); dl.href = p.image_url; dl.setAttribute("download", p.slug);
     $("#lightbox").hidden = false;
     document.body.style.overflow = "hidden";
@@ -233,6 +230,10 @@
 
   /* ------------------------------------------------------------ upload */
   function bindUpload() {
+    if (!C.upload.enabled) {
+      document.querySelectorAll('#upload, a[href="#upload"]').forEach((n) => n.remove());
+      return;
+    }
     $("#maxMb").textContent = C.upload.maxMb;
     $("#fCat").innerHTML = '<option value="">Category *</option>' + C.categories.map((c) => `<option value="${c.slug}">${esc(c.name)}</option>`).join("");
     let file = null, dims = { w: null, h: null };

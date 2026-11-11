@@ -62,7 +62,14 @@ window.PEPE_CONFIG = {
     bucket: "pics",
   },
 
+  /** Gallery source: your pictures in pics/ → data/pics.json (run: node scripts/build-pics.mjs) */
+  gallery: {
+    showSamples: true, // set false once you have added your own pictures
+  },
+
+  /** Visitor uploads to Supabase — off for now. */
   upload: {
+    enabled: false,
     maxMb: 10,
     types: ["image/jpeg", "image/png", "image/webp", "image/gif"],
   },
