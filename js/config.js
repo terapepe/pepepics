@@ -9,10 +9,10 @@ window.PEPE_CONFIG = {
   token: {
     name: "PEPES",
     symbol: "PEPES",
-    evmAddress: "0xD32EF052E29774FfE91f348DCC544BC9272Ac6Ea",
-    solanaMint: "4JLhvDtYWjyPSHCorMEkqauQd3yxU7eVqJ86bU7146ea",
+    evmAddress: "0x8306bCD55Abd31D9910c8FCCd5fA5F3b855D0087",
+    solanaMint: "",
   },
-  mode: "multi",
+  mode: "single",
   singleNetwork: "robinhood",
   multiOrder: ["solana", "robinhood", "base", "bsc"],
 
