@@ -64,7 +64,7 @@ window.PEPE_CONFIG = {
 
   /** Gallery source: your pictures in pics/ → data/pics.json (run: node scripts/build-pics.mjs) */
   gallery: {
-    showSamples: true, // set false once you have added your own pictures
+    showSamples: false, // true = also show the 200 generated sample pictures
   },
 
   /** Visitor uploads to Supabase — off for now. */

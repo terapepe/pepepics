@@ -103,7 +103,7 @@
     const a = el("article", "card");
     a.tabIndex = 0;
     const ratio = `${p.width || 600}/${p.height || 750}`;
-    a.innerHTML = `<div class="ph" style="aspect-ratio:${ratio}">${p.featured ? '<span class="badge">Featured</span>' : p.is_sample ? '<span class="badge">Sample</span>' : ""}<img loading="lazy" decoding="async" alt="${esc(p.title)}" src="${esc(p.image_url)}" /></div>
+    a.innerHTML = `<div class="ph" style="aspect-ratio:${ratio}">${p.featured ? '<span class="badge">Featured</span>' : p.is_sample ? '<span class="badge">Sample</span>' : ""}${p.video_url ? '<span class="play">▶</span>' : ""}<img loading="lazy" decoding="async" alt="${esc(p.title)}" src="${esc(p.image_url)}" /></div>
       <div class="meta"><div style="min-width:0"><div class="t">${esc(p.title)}</div><div class="c">${esc(catName[p.category] || "")}${p.creator && !p.is_sample ? " · " + esc(p.creator) : ""}</div></div>${p.id ? `<span class="l">♥ ${p.likes}</span>` : ""}</div>`;
     const img = a.querySelector("img");
     img.onload = () => img.classList.add("ok");
@@ -143,8 +143,10 @@
       return b;
     };
     box.innerHTML = "";
+    const used = C.categories.map((c) => [c, all.filter((p) => p.category === c.slug).length]).filter(([, n]) => n > 0);
+    box.hidden = used.length === 0;
     box.appendChild(mk("", "All"));
-    C.categories.forEach((c) => box.appendChild(mk(c.slug, `${esc(c.name)} <span style="opacity:.6">${all.filter((p) => p.category === c.slug).length}</span>`)));
+    used.forEach(([c, n]) => box.appendChild(mk(c.slug, `${esc(c.name)} <span style="opacity:.6">${n}</span>`)));
   }
 
   function renderCollage() {
@@ -152,7 +154,7 @@
       ["2%", "6%", "38%", -3], ["44%", "0", "30%", 2], ["76%", "12%", "24%", 4], ["18%", "54%", "28%", 3],
       ["50%", "42%", "34%", -2], ["0", "68%", "17%", -5], ["80%", "64%", "19%", 5],
     ];
-    const pick = [...all.filter((p) => p.featured), ...all].filter((p, i, a) => a.indexOf(p) === i).slice(0, slots.length);
+    const pick = [...all.filter((p) => p.featured), ...all.filter((p) => !p.video_url)].filter((p, i, a) => a.indexOf(p) === i).slice(0, slots.length);
     const box = $("#collage"); box.innerHTML = "";
     pick.forEach((p, i) => {
       const [l, t, w, r] = slots[i];
@@ -170,20 +172,22 @@
     const p = state.list[i];
     if (!p) return;
     lbIndex = i;
-    $("#lbImg").src = p.image_url;
-    $("#lbImg").alt = p.title;
+    const v = $("#lbVid"), im = $("#lbImg");
+    if (p.video_url) { im.hidden = true; v.hidden = false; v.poster = p.image_url; v.src = p.video_url; v.play().catch(() => {}); }
+    else { v.pause(); v.removeAttribute("src"); v.hidden = true; im.hidden = false; im.src = p.image_url; im.alt = p.title; }
     $("#lbTitle").textContent = p.title;
     $("#lbMeta").textContent = [catName[p.category], p.creator, new Date(p.created_at).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }), p.tags.map((t) => "#" + t).join(" ")].filter(Boolean).join(" · ");
     const likeBtn = $("#lbLike");
     likeBtn.textContent = `♥ ${p.likes}`;
     likeBtn.classList.toggle("liked", liked.has(p.slug));
     likeBtn.hidden = !p.id;
-    const dl = $("#lbDl"); dl.href = p.image_url; dl.setAttribute("download", p.slug);
+    const dl = $("#lbDl"); dl.href = p.video_url || p.image_url; dl.setAttribute("download", p.slug);
     $("#lightbox").hidden = false;
     document.body.style.overflow = "hidden";
     history.replaceState(null, "", `#pic=${p.slug}`);
   }
   function closeLb() {
+    $("#lbVid").pause();
     $("#lightbox").hidden = true;
     document.body.style.overflow = "";
     lbIndex = -1;
@@ -316,8 +320,8 @@
     $("#nav").onclick = () => $("#nav").classList.remove("open");
 
     all = await load();
-    $("#statPics").textContent = all.length;
-    $("#statCats").textContent = C.categories.length;
+    $("#statPics").textContent = all.filter((p) => !p.video_url).length;
+    $("#statCats").textContent = all.filter((p) => p.video_url).length;
     renderCats();
     renderCollage();
     layout(true);

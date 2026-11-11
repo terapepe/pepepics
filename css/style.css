@@ -146,7 +146,8 @@ button, input, select { font: inherit; color: inherit; }
 .lightbox { position: fixed; inset: 0; z-index: 80; background: rgba(5,6,5,.97); display: grid; grid-template-columns: 60px 1fr 60px; align-items: center; padding: 20px; }
 .lightbox[hidden] { display: none; }
 .lb-fig { margin: 0; display: grid; gap: 14px; justify-items: center; max-height: calc(100vh - 40px); }
-.lb-fig img { max-width: 100%; max-height: calc(100vh - 150px); object-fit: contain; border-radius: 12px; }
+.lb-fig img, .lb-fig video { max-width: 100%; max-height: calc(100vh - 150px); object-fit: contain; border-radius: 12px; }
+.card .play { position: absolute; right: 10px; bottom: 10px; z-index: 1; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: rgba(0,0,0,.6); color: var(--pepe); font-size: 13px; backdrop-filter: blur(6px); }
 .lb-fig figcaption { display: flex; gap: 16px; justify-content: space-between; align-items: center; flex-wrap: wrap; width: 100%; max-width: 900px; }
 .lb-title { font: 700 22px/1.2 var(--display); }
 .lb-close { position: absolute; right: 16px; top: 16px; }
