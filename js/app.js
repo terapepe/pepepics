@@ -314,8 +314,8 @@
   /* ------------------------------------------------------------ init */
   async function init() {
     const x = C.social.x;
-    $("#navX").href = x; $("#footX").href = x; $("#footX").textContent = "𝕏 " + C.social.xHandle;
-    if (C.social.telegram) ["#navTg", "#footTg"].forEach((s) => { $(s).href = C.social.telegram; $(s).hidden = false; });
+    $("#footX").href = x; $("#footX").textContent = "𝕏 " + C.social.xHandle;
+    if (C.social.telegram) { $("#footTg").href = C.social.telegram; $("#footTg").hidden = false; }
     $("#subtitle").textContent = C.brand.subtitle;
     renderToken();
     renderSponsor();
