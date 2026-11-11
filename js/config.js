@@ -9,7 +9,7 @@ window.PEPE_CONFIG = {
   token: {
     name: "PEPES",
     symbol: "PEPES",
-    evmAddress: "0xb5136f4b09367caa3ea7302ca1e7ac4b375db01b",
+    evmAddress: "",
     solanaMint: "",
   },
   mode: "single",
@@ -44,9 +44,9 @@ window.PEPE_CONFIG = {
   },
 
   social: {
-    x: "",//https://x.com/PepePicture//
-    xHandle: "@PepePicture",
-    telegram: "https://t.me/pepes",
+    x: "//https://x.com/PepeTheFrog//",
+    xHandle: "@PepeTheFrog",
+    telegram: "https://t.me/PepeTheFrog",
   },
 
   /** Supabase: pictures table + Storage bucket for uploads. The anon key is public by design. */
