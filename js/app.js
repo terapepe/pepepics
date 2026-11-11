@@ -30,15 +30,15 @@
   const ICON_COPY = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
   const ICON_EXT = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3h7v7M21 3l-9 9M19 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"/></svg>';
 
-  function caRow(n, short) {
-    const ca = caOf(n);
+  function caRow(n, short, addr) {
+    const ca = addr === undefined ? caOf(n) : addr;
     const row = el("div", "ca-row");
-    const shown = ca ? (short && ca.length > 18 ? `${ca.slice(0, 6)}…${ca.slice(-6)}` : ca) : "CA coming soon";
+    const shown = ca ? (short && ca.length > 18 ? `${ca.slice(0, 6)}…${ca.slice(-6)}` : ca) : addr === undefined ? "CA coming soon" : "Coming soon";
     row.innerHTML = `<img src="${esc(n.icon)}" alt="${esc(n.name)}" />
       <div class="ca-info"><div class="ca-net">${esc(n.name)}</div><div class="ca-addr ${ca ? "" : "soon"}" title="${esc(ca)}">${esc(shown)}</div></div>
       ${ca ? `<a href="${esc(n.explorer + ca)}" target="_blank" rel="noopener" aria-label="Explorer">${ICON_EXT}</a>` : ""}
       <button ${ca ? "" : "disabled"} aria-label="Copy ${esc(n.short)} CA">${ICON_COPY}</button>`;
-    row.querySelector("button").onclick = () => copy(ca, `${n.short} CA`);
+    row.querySelector("button").onclick = () => copy(ca, addr === undefined ? `${n.short} CA` : "Address");
     return row;
   }
 
@@ -70,6 +70,21 @@
     const cl = $("#caList"); cl.innerHTML = "";
     list.forEach((n) => cl.appendChild(caRow(n, !single)));
     $("#statNets").textContent = list.length;
+  }
+
+  /* ------------------------------------------------------------ sponsor wallets */
+  function renderSponsor() {
+    const sp = C.sponsor || {};
+    const box = $("#sponsorWallets");
+    box.innerHTML = `<div class="ca-net" style="font:600 10px var(--display);letter-spacing:.14em;color:var(--mute)">SPONSOR WALLETS</div>`;
+    nets().forEach((n) => {
+      const addr = n.type === "solana" ? sp.solanaAddress : sp.evmAddress;
+      const row = caRow({ ...n, explorer: n.explorer.replace(/token\/?$/, n.type === "solana" ? "account/" : "address/") }, true, addr || "");
+      box.appendChild(row);
+    });
+    const tip = el("p", "muted", "Always double-check the address. Send only on the matching network.");
+    tip.style.cssText = "font-size:12px;margin:4px 0 0";
+    box.appendChild(tip);
   }
 
   /* ------------------------------------------------------------ data */
@@ -302,6 +317,8 @@
     $("#navX").href = x; $("#footX").href = x; $("#footX").textContent = "𝕏 " + C.social.xHandle;
     $("#subtitle").textContent = C.brand.subtitle;
     renderToken();
+    renderSponsor();
+    $("#contestX").href = x; $("#sponsorX").href = x;
     bindUpload();
     bindLb();
 

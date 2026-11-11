@@ -203,6 +203,34 @@ button, input, select { font: inherit; color: inherit; }
 .mf-shout { font-size: clamp(32px, 4.4vw, 60px); }
 .mf-note { flex-basis: 100%; margin: 0; font-size: 12px; color: var(--mute); }
 
+/* contest / network / sponsor */
+.pill { display: inline-block; padding: 5px 9px; border-radius: 999px; background: var(--pepe); color: var(--bg); letter-spacing: .1em; }
+.contest { display: grid; grid-template-columns: 1fr 1fr; gap: 30px 50px; padding: 40px; border-radius: 28px; border: 1px solid rgba(166,229,109,.3); background: radial-gradient(ellipse at top left, rgba(166,229,109,.16), transparent 60%), var(--card); }
+.ct-prize { display: flex; flex-direction: column; margin: 26px 0 18px; }
+.ct-prize span { font: 600 12px/1 var(--display); letter-spacing: .16em; text-transform: uppercase; color: var(--mute); }
+.ct-prize b { font: 700 clamp(56px, 8vw, 104px)/1 var(--display); letter-spacing: -.04em; color: var(--pepe); text-shadow: 0 0 40px rgba(166,229,109,.35); }
+.ct-steps { list-style: none; counter-reset: s; margin: 0; padding: 0; display: grid; gap: 12px; align-content: center; }
+.ct-steps li { counter-increment: s; display: grid; grid-template-columns: 44px 1fr; gap: 2px 14px; padding: 16px; border-radius: 18px; border: 1px solid var(--line); background: var(--bg2); }
+.ct-steps li::before { content: "0" counter(s); grid-row: span 2; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: rgba(166,229,109,.12); color: var(--pepe); font: 700 15px ui-monospace, Menlo, monospace; }
+.ct-steps b { font: 700 18px/1.2 var(--display); }
+.ct-steps span { color: var(--mute); font-size: 14px; }
+.ct-judge { grid-column: 1 / -1; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 24px; padding-top: 22px; border-top: 1px solid var(--line); font-size: 14px; }
+.ct-judge a { color: var(--pepe); }
+.net-box { position: relative; overflow: hidden; display: grid; grid-template-columns: 1fr 1.1fr; gap: 30px 50px; align-items: center; padding: 40px; border-radius: 28px; border: 1px solid var(--line); background: var(--card); }
+.net-deco { position: absolute; left: -8%; bottom: -30%; width: 46%; opacity: .1; pointer-events: none; mask-image: radial-gradient(circle, #000 40%, transparent 72%); }
+.net-copy, .net-grid { position: relative; }
+.net-copy .muted { margin-top: 18px; max-width: 440px; }
+.net-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.net-grid article { padding: 20px; border-radius: 18px; border: 1px solid var(--line); background: rgba(18,21,18,.85); }
+.net-grid h3 { margin: 0 0 6px; font: 700 19px/1.2 var(--display); }
+.net-grid p { margin: 0; color: var(--mute); font-size: 14px; }
+.sponsor { display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; align-items: center; padding: 40px; border-radius: 28px; border: 1px solid var(--line); background: linear-gradient(160deg, rgba(166,229,109,.08), transparent 50%), var(--card); }
+.sponsor .muted { margin: 18px 0 0; max-width: 460px; }
+.sp-list { margin: 18px 0 24px; padding-left: 18px; color: rgba(243,244,236,.82); font-size: 15px; }
+.sp-list li { margin-bottom: 8px; }
+.sp-list li::marker { color: var(--pepe); }
+.sp-wallets { grid-template-columns: 1fr !important; }
+
 /* footer */
 .footer { margin-top: 80px; border-top: 1px solid var(--line); background: var(--bg2); }
 .footer-in { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; padding-top: 40px; padding-bottom: 30px; }
@@ -226,7 +254,7 @@ button, input, select { font: inherit; color: inherit; }
 
 @media (max-width: 960px) {
   .hero, .upload-box, .token-box { grid-template-columns: 1fr; }
-  .manifesto { grid-template-columns: 1fr; }
+  .manifesto, .contest, .net-box, .sponsor { grid-template-columns: 1fr; }
   .mf-pillars { grid-template-columns: 1fr 1fr; }
   .hero-art { max-width: 520px; width: 100%; margin: 0 auto; }
   .nav { display: none; position: absolute; top: 70px; left: 0; right: 0; flex-direction: column; padding: 12px 20px 20px; background: var(--bg2); border-bottom: 1px solid var(--line); }
@@ -245,7 +273,8 @@ button, input, select { font: inherit; color: inherit; }
   .topbar-in { gap: 8px; }
   .upload-box, .token-box { padding: 22px; }
   .form-row, .ca-list, .mf-pillars { grid-template-columns: 1fr; }
-  .mf-close { padding: 22px; }
+  .mf-close, .contest, .net-box, .sponsor { padding: 22px; }
+  .net-grid { grid-template-columns: 1fr; }
   .ca-menu { position: fixed; left: 12px; right: 12px; top: 72px; width: auto; }
   .stats { gap: 24px; }
   .grid, .col { gap: 12px; }

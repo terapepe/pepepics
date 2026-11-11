@@ -66,6 +66,12 @@ window.PEPE_CONFIG = {
     bucket: "pics",
   },
 
+  /** Sponsor section: wallets that receive sponsorships/donations (empty = "coming soon"). */
+  sponsor: {
+    evmAddress: "",   // receives on Robinhood, Base, BSC
+    solanaAddress: "",
+  },
+
   /** Wallet connect: shows only the networks visible in the current mode. Balances of $PEPES appear once the CA is set. */
   wallet: { enabled: true },
 
