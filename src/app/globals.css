@@ -1,0 +1,114 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/space-grotesk";
+
+@theme {
+  --color-bg: #0b0d0b;
+  --color-bg2: #121512;
+  --color-card: #171b17;
+  --color-pepe: #a6e56d;
+  --color-pepe2: #75b94a;
+  --color-ink: #f3f4ec;
+  --color-mute: #92988f;
+  --color-line: #282e28;
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk Variable", "Inter Variable", ui-sans-serif, sans-serif;
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  font-family: var(--font-sans);
+  min-height: 100dvh;
+}
+::selection {
+  background: var(--color-pepe);
+  color: var(--color-bg);
+}
+:focus-visible {
+  outline: 2px solid var(--color-pepe);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+@utility container-x {
+  @apply mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-10;
+}
+@utility label {
+  @apply font-display text-[11px] font-semibold tracking-[0.18em] uppercase;
+}
+@utility h-display {
+  @apply font-display font-bold tracking-[-0.03em] leading-[0.92];
+}
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-5 h-11 font-display text-[13px] font-semibold tracking-[0.08em] uppercase transition duration-200 disabled:opacity-50 disabled:pointer-events-none;
+}
+@utility btn-primary {
+  @apply btn bg-pepe text-bg hover:bg-[#b9f283] active:scale-[0.98];
+}
+@utility btn-ghost {
+  @apply btn border border-line text-ink hover:border-pepe/60 hover:text-pepe;
+}
+@utility btn-sm {
+  @apply h-9 px-4 text-[11px];
+}
+@utility icon-btn {
+  @apply inline-flex size-10 items-center justify-center rounded-full text-ink/80 transition hover:bg-white/5 hover:text-pepe;
+}
+@utility chip {
+  @apply inline-flex items-center gap-1.5 rounded-full border border-line px-3.5 h-9 text-[13px] text-mute transition hover:text-ink hover:border-white/20 whitespace-nowrap;
+}
+@utility chip-active {
+  @apply border-pepe bg-pepe text-bg hover:text-bg hover:border-pepe;
+}
+@utility input {
+  @apply w-full rounded-xl border border-line bg-bg2 px-4 h-11 text-[15px] text-ink placeholder:text-mute/70 outline-none transition focus:border-pepe/70;
+}
+@utility textarea {
+  @apply input h-auto min-h-28 py-3;
+}
+@utility card {
+  @apply rounded-2xl border border-line bg-card;
+}
+@utility skeleton {
+  @apply animate-pulse rounded-2xl bg-card;
+}
+
+/* Masonry (CSS columns) */
+.masonry {
+  column-gap: 16px;
+  columns: 2;
+}
+@media (min-width: 768px) {
+  .masonry { columns: 3; }
+}
+@media (min-width: 1100px) {
+  .masonry { columns: 4; column-gap: 20px; }
+}
+@media (min-width: 1500px) {
+  .masonry { columns: 5; }
+}
+.masonry > * {
+  break-inside: avoid;
+  margin-bottom: 16px;
+}
+@media (min-width: 1100px) {
+  .masonry > * { margin-bottom: 20px; }
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+
+.grain {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 3px 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
