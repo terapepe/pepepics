@@ -12,7 +12,7 @@ window.PEPE_CONFIG = {
     evmAddress: "",
     solanaMint: "",
   },
-  mode: "single",
+  mode: "multi",
   singleNetwork: "robinhood",
   multiOrder: ["solana", "robinhood", "base", "bsc"],
 
