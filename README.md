@@ -33,6 +33,13 @@ Any static host: Hostinger (upload the files to `public_html`), GitHub Pages, Ne
 
 CAs are shown with the network SVG + copy button + explorer link (header `$PEPES` button and the Token section). Empty CA → "CA coming soon".
 
+## Wallet connect
+
+Header **Connect** button (`js/wallet.js`). Offers only the networks visible in the current mode:
+EVM (Robinhood, Base, BSC) via any injected wallet (MetaMask, Rabby, Coinbase… — the chain is switched/added automatically),
+Solana via Phantom, Solflare or Backpack. Shows the `$PEPES` balance once the CA is set in `js/config.js`.
+Turn off with `wallet.enabled: false`.
+
 ## Supabase (visitor uploads — currently off: `upload.enabled: false`)
 
 1. SQL Editor → run `supabase/schema.sql` (table `pics`, RLS, `like_pic()` function, public Storage bucket `pics`).

@@ -7,9 +7,13 @@
   <meta name="description" content="Explore the world of Pepe art. Discover classic memes, rare artwork, creative variations and community creations." />
   <meta property="og:title" content="PEPE.PICS — The Ultimate Pepe Gallery" />
   <meta property="og:description" content="Every Pepe has a story. The Internet's home for Pepe art." />
+  <meta property="og:image" content="assets/og.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="assets/og.jpg" />
   <meta name="twitter:site" content="@PepePicture" />
   <meta name="theme-color" content="#0B0D0B" />
-  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="assets/favicon.png" type="image/png" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
@@ -19,7 +23,7 @@
   <header class="topbar" id="topbar">
     <div class="wrap topbar-in">
       <a href="#" class="brand" aria-label="PEPE.PICS home">
-        <img src="assets/logo.svg" alt="" width="36" height="36" />
+        <img src="assets/logo.png" alt="" width="38" height="38" class="logo" />
         <span class="wordmark" id="wordmark">PEPE<b>.</b>PICS</span>
       </a>
       <nav class="nav" id="nav" aria-label="Main">
@@ -35,7 +39,7 @@
           </button>
           <div class="ca-menu" id="caMenu" hidden></div>
         </div>
-        <a href="#upload" class="btn btn-primary btn-sm hide-sm">Upload</a>
+        <button class="btn btn-primary btn-sm wallet-btn" id="walletBtn" hidden>Connect</button>
         <button class="icon-btn burger" id="burger" aria-label="Menu"><span></span><span></span></button>
       </div>
     </div>
@@ -58,8 +62,16 @@
           <div><dt>Networks</dt><dd id="statNets">—</dd></div>
         </dl>
       </div>
-      <div class="collage" id="collage" aria-hidden="true"></div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="glow"></div>
+        <img class="art-main" src="assets/hero-pepes.webp" alt="" />
+        <img class="art-a" src="assets/deco-ascii.webp" alt="" />
+        <img class="art-b" src="assets/deco-mosaic.webp" alt="" />
+        <span class="art-tag">// $PEPES</span>
+      </div>
     </section>
+
+    <div class="marquee" aria-hidden="true"><div class="marquee-track" id="marquee"></div></div>
 
     <!-- GALLERY -->
     <section class="wrap section" id="gallery">
@@ -118,6 +130,7 @@
     <!-- TOKEN -->
     <section class="wrap section" id="token">
       <div class="token-box" id="tokenBox">
+        <img class="token-deco" src="assets/deco-data.webp" alt="" aria-hidden="true" />
         <div>
           <p class="eyebrow" id="tokenEyebrow"></p>
           <h2 class="display h2" id="tokenTitle"></h2>
@@ -131,7 +144,7 @@
   <footer class="footer">
     <div class="wrap footer-in">
       <div>
-        <a href="#" class="brand"><img src="assets/logo.svg" alt="" width="32" height="32" /><span class="wordmark">PEPE<b>.</b>PICS</span></a>
+        <a href="#" class="brand"><img src="assets/logo.png" alt="" width="34" height="34" class="logo" /><span class="wordmark">PEPE<b>.</b>PICS</span></a>
         <p class="muted">Every Pepe Has a Story.</p>
       </div>
       <a class="chip" id="footX" target="_blank" rel="noopener"></a>
@@ -164,9 +177,14 @@
     <button class="lb-nav lb-next icon-btn" data-lb="next" aria-label="Next">›</button>
   </div>
 
+  <div class="w-modal" id="walletModal" hidden role="dialog" aria-modal="true" aria-label="Wallet">
+    <div class="w-card"><button class="icon-btn w-close" data-w-close aria-label="Close">✕</button><div id="walletBody"></div></div>
+  </div>
+
   <div class="toast" id="toast" hidden></div>
 
   <script src="js/config.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/wallet.js"></script>
 </body>
 </html>

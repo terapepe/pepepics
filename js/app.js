@@ -149,21 +149,11 @@
     used.forEach(([c, n]) => box.appendChild(mk(c.slug, `${esc(c.name)} <span style="opacity:.6">${n}</span>`)));
   }
 
-  function renderCollage() {
-    const slots = [
-      ["2%", "6%", "38%", -3], ["44%", "0", "30%", 2], ["76%", "12%", "24%", 4], ["18%", "54%", "28%", 3],
-      ["50%", "42%", "34%", -2], ["0", "68%", "17%", -5], ["80%", "64%", "19%", 5],
-    ];
-    const pick = [...all.filter((p) => p.featured), ...all.filter((p) => !p.video_url)].filter((p, i, a) => a.indexOf(p) === i).slice(0, slots.length);
-    const box = $("#collage"); box.innerHTML = "";
-    pick.forEach((p, i) => {
-      const [l, t, w, r] = slots[i];
-      const a = el("a");
-      a.href = `#pic=${p.slug}`;
-      a.style.cssText = `left:${l};top:${t};width:${w};aspect-ratio:${p.width || 600}/${p.height || 750};rotate:${r}deg;animation-delay:${i * -0.9}s`;
-      a.innerHTML = `<img src="${esc(p.image_url)}" alt="" />`;
-      box.appendChild(a);
-    });
+  // scrolling strip of album pictures under the hero
+  function renderMarquee() {
+    const pick = [...all.filter((p) => p.featured), ...all.filter((p) => !p.video_url)].filter((p, i, a) => a.indexOf(p) === i).slice(0, 18);
+    const html = pick.map((p) => `<a href="#pic=${esc(p.slug)}"><img src="${esc(p.image_url)}" alt="" loading="lazy" /></a>`).join("");
+    $("#marquee").innerHTML = html + html; // duplicated for a seamless loop
   }
 
   /* ------------------------------------------------------------ lightbox */
@@ -323,7 +313,7 @@
     $("#statPics").textContent = all.filter((p) => !p.video_url).length;
     $("#statCats").textContent = all.filter((p) => p.video_url).length;
     renderCats();
-    renderCollage();
+    renderMarquee();
     layout(true);
 
     let t;
@@ -334,7 +324,7 @@
     let lastCols = colCount();
     addEventListener("resize", () => { if (colCount() !== lastCols) { lastCols = colCount(); const n = state.shown; layout(true); while (state.shown < n) layout(false); } });
     $("#randomBtn").onclick = () => { state.cat = ""; state.q = ""; $("#search").value = ""; renderCats(); layout(true); const i = Math.floor(Math.random() * state.list.length); while (i >= state.shown) layout(false); openLb(i); };
-    $("#collage").addEventListener("click", (e) => { const a = e.target.closest("a"); if (a) { e.preventDefault(); location.hash = a.getAttribute("href"); } });
+    $("#marquee").addEventListener("click", (e) => { const a = e.target.closest("a"); if (a) { e.preventDefault(); location.hash = a.getAttribute("href"); } });
     addEventListener("hashchange", openFromHash);
     openFromHash();
   }
