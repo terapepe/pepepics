@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PEPE.PICS — The Ultimate Pepe Gallery</title>
+  <meta name="description" content="Explore the world of Pepe art. Discover classic memes, rare artwork, creative variations and community creations." />
+  <meta property="og:title" content="PEPE.PICS — The Ultimate Pepe Gallery" />
+  <meta property="og:description" content="Every Pepe has a story. The Internet's home for Pepe art." />
+  <meta name="twitter:site" content="@PepePicture" />
+  <meta name="theme-color" content="#0B0D0B" />
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="topbar" id="topbar">
+    <div class="wrap topbar-in">
+      <a href="#" class="brand" aria-label="PEPE.PICS home">
+        <img src="assets/logo.svg" alt="" width="36" height="36" />
+        <span class="wordmark" id="wordmark">PEPE<b>.</b>PICS</span>
+      </a>
+      <nav class="nav" id="nav" aria-label="Main">
+        <a href="#gallery">Gallery</a>
+        <a href="#upload">Upload</a>
+        <a href="#token">Token</a>
+        <a id="navX" target="_blank" rel="noopener">X</a>
+      </nav>
+      <div class="actions">
+        <div class="ca-pop">
+          <button class="chip ca-btn" id="caBtn" aria-expanded="false" aria-label="Contract address">
+            <span class="net-stack" id="caStack"></span><span id="caSym"></span>
+          </button>
+          <div class="ca-menu" id="caMenu" hidden></div>
+        </div>
+        <a href="#upload" class="btn btn-primary btn-sm hide-sm">Upload</a>
+        <button class="icon-btn burger" id="burger" aria-label="Menu"><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero wrap">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="line"></span> <span id="subtitle"></span></p>
+        <h1 class="display">EVERY PEPE<br /><span class="accent">HAS A STORY.</span></h1>
+        <p class="lead">Explore the culture, creativity, and endless evolution of Pepe through an ever-growing collection of internet art.</p>
+        <div class="row">
+          <a href="#gallery" class="btn btn-primary">Explore Gallery →</a>
+          <button class="btn btn-ghost" id="randomBtn">Random Pepe</button>
+        </div>
+        <dl class="stats">
+          <div><dt>Pictures</dt><dd id="statPics">—</dd></div>
+          <div><dt>Categories</dt><dd id="statCats">—</dd></div>
+          <div><dt>Networks</dt><dd id="statNets">—</dd></div>
+        </dl>
+      </div>
+      <div class="collage" id="collage" aria-hidden="true"></div>
+    </section>
+
+    <!-- GALLERY -->
+    <section class="wrap section" id="gallery">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">Gallery</p>
+          <h2 class="display h2">EXPLORE THE PEPEVERSE</h2>
+        </div>
+        <p class="muted" id="count"></p>
+      </div>
+      <div class="toolbar">
+        <input id="search" class="input" type="search" placeholder="Search title or tag…" aria-label="Search" />
+        <div class="chips" id="cats" role="tablist" aria-label="Categories"></div>
+        <select id="sort" class="input select" aria-label="Sort">
+          <option value="latest">Latest</option>
+          <option value="popular">Most liked</option>
+          <option value="random">Random</option>
+        </select>
+      </div>
+      <div class="grid" id="grid"></div>
+      <p class="empty" id="empty" hidden>No Pepe found. Try another word or category.</p>
+      <div class="center"><button class="btn btn-ghost" id="more" hidden>Load more</button></div>
+    </section>
+
+    <!-- UPLOAD -->
+    <section class="wrap section" id="upload">
+      <div class="upload-box">
+        <div>
+          <p class="eyebrow">Community</p>
+          <h2 class="display h2">YOUR PEPE BELONGS HERE.</h2>
+          <p class="muted">Share your Pepe with the world. JPG, PNG, WEBP or GIF up to <span id="maxMb"></span> MB.
+            Every upload is reviewed before it appears in the gallery.</p>
+        </div>
+        <form id="uploadForm" class="form" novalidate>
+          <label class="drop" id="drop">
+            <input type="file" id="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden />
+            <img id="preview" alt="Preview" hidden />
+            <span id="dropText">Drop an image here or <b>browse</b></span>
+          </label>
+          <div class="form-row">
+            <input class="input" id="fTitle" maxlength="80" placeholder="Title *" />
+            <select class="input select" id="fCat"></select>
+          </div>
+          <div class="form-row">
+            <input class="input" id="fCreator" maxlength="40" placeholder="Your name (optional)" />
+            <input class="input" id="fTags" maxlength="120" placeholder="Tags: space, neon, smug" />
+          </div>
+          <label class="check"><input type="checkbox" id="fOwn" /> I made this or have permission to share it.</label>
+          <div class="progress" id="progress" hidden><span id="bar"></span></div>
+          <p class="msg" id="msg" role="status"></p>
+          <button class="btn btn-primary" id="submitBtn" type="submit">Upload for review</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- TOKEN -->
+    <section class="wrap section" id="token">
+      <div class="token-box" id="tokenBox">
+        <div>
+          <p class="eyebrow" id="tokenEyebrow"></p>
+          <h2 class="display h2" id="tokenTitle"></h2>
+          <p class="muted" id="tokenText"></p>
+        </div>
+        <div class="ca-list" id="caList"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-in">
+      <div>
+        <a href="#" class="brand"><img src="assets/logo.svg" alt="" width="32" height="32" /><span class="wordmark">PEPE<b>.</b>PICS</span></a>
+        <p class="muted">Every Pepe Has a Story.</p>
+      </div>
+      <a class="chip" id="footX" target="_blank" rel="noopener"></a>
+    </div>
+    <div class="wrap legal">
+      <p>PEPE.PICS is an independent fan-driven gallery and is not affiliated with or endorsed by Matt Furie or the original Pepe the Frog creators. Artwork remains the property of its respective creators and rights holders. Pictures marked “Sample” are generated placeholders, not historical originals or Rare Pepe collectibles.</p>
+      <p>© 2026 PEPE.PICS. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Picture">
+    <button class="lb-close icon-btn" data-lb="close" aria-label="Close">✕</button>
+    <button class="lb-nav lb-prev icon-btn" data-lb="prev" aria-label="Previous">‹</button>
+    <figure class="lb-fig">
+      <img id="lbImg" alt="" />
+      <figcaption>
+        <div>
+          <div class="lb-title" id="lbTitle"></div>
+          <div class="muted" id="lbMeta"></div>
+        </div>
+        <div class="row">
+          <button class="btn btn-ghost btn-sm" data-lb="like" id="lbLike">♥ Like</button>
+          <button class="btn btn-ghost btn-sm" data-lb="copy">Copy link</button>
+          <a class="btn btn-ghost btn-sm" id="lbDl" download>Download</a>
+        </div>
+      </figcaption>
+    </figure>
+    <button class="lb-nav lb-next icon-btn" data-lb="next" aria-label="Next">›</button>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

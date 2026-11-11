@@ -4,9 +4,9 @@
  *   node scripts/generate-samples.mjs
  *
  * Outputs:
- *   public/samples/*.svg          placeholder images (labeled "SAMPLE")
- *   src/data/seed.json            dataset used by DEMO MODE (no Supabase)
- *   supabase/seed.sql             same dataset for the real database
+ *   samples/*.svg                 placeholder images (labeled "SAMPLE")
+ *   data/samples.json             fallback list when Supabase is unreachable
+ *   supabase/seed.sql             the same list for the database
  *
  * These are NOT historical Pepe originals or Rare Pepe collectibles. They are abstract,
  * generated placeholders so the gallery is complete until real artwork is uploaded.
@@ -15,7 +15,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
-const PER_CATEGORY = 12;
+const PER_CATEGORY = 25;
 
 let seed = 20261111;
 const rnd = () => ((seed = (seed * 1664525 + 1013904223) % 4294967296) / 4294967296);
@@ -195,89 +195,46 @@ function paint(cat, w, h, i) {
 }
 
 // ---------- build dataset ----------
-const outDir = path.join(root, "public/samples");
+const extra = ["Midnight", "Golden Hour", "Lo-Fi", "Vapor", "Sunset", "Winter", "Summer", "Electric", "Velvet", "Lucky", "Quiet", "Wild", "Royal", "Cosmic", "Neon", "Paper", "Chill", "Turbo", "Moonlit", "Rainbow"];
+const outDir = path.join(root, "samples");
 fs.rmSync(outDir, { recursive: true, force: true });
 fs.mkdirSync(outDir, { recursive: true });
 
-const now = Date.UTC(2026, 10, 10, 12);
-const artworks = [];
+const pics = [];
 let idx = 0;
 for (const cat of categories) {
-  const titles = [...named[cat.slug]];
-  const adj = [...adjectives[cat.slug]];
-  while (titles.length < PER_CATEGORY) {
-    const a = adj.splice(Math.floor(rnd() * adj.length), 1)[0];
-    titles.push(`${a} ${cat.name.replace(" Pepe", "")} Pepe`.replace("Classic Pepe", "Pepe"));
+  const titles = new Set(named[cat.slug]);
+  const base = cat.name.replace(" Pepe", "");
+  const words = [...adjectives[cat.slug], ...extra];
+  while (titles.size < PER_CATEGORY) {
+    const t = `${pick(words)} ${base === "Classic" ? "" : base + " "}Pepe`.replace(/\s+/g, " ");
+    titles.add(t);
   }
-  titles.forEach((title, k) => {
+  for (const title of titles) {
     idx++;
     const [w, h] = pick(ratios);
     const slug = slugify(title);
-    const file = `${slug}.svg`;
-    fs.writeFileSync(path.join(outDir, file), paint(cat.slug, w, h, idx));
-    const tags = [...new Set([pick(tagPool[cat.slug]), pick(tagPool[cat.slug]), pick(tagPool[cat.slug]), "sample"])];
-    artworks.push({
-      slug,
-      title,
-      description: `${title} — a generated placeholder piece for the ${cat.name} category. This is sample artwork created for PEPE.PICS so the gallery is complete before real community artwork is uploaded. It is not a historical original or a Rare Pepe collectible.`,
-      image_url: `/samples/${file}`,
-      thumbnail_url: `/samples/${file}`,
-      width: w,
-      height: h,
-      category: cat.slug,
-      creator_name: "PEPE.PICS Studio (sample)",
-      creation_year: null,
-      source_url: null,
-      license_type: "Sample placeholder — free to use",
-      artwork_type: typeFor[cat.slug] ?? pick(types),
-      tags,
-      featured: k === 0 || (cat.slug === "space" && k === 1),
-      is_sample: true,
-      allow_download: true,
-      created_at: "",
-    });
-  });
+    fs.writeFileSync(path.join(outDir, `${slug}.svg`), paint(cat.slug, w, h, idx));
+    pics.push({ slug, title, category: cat.slug, w, h, tags: [...new Set([pick(tagPool[cat.slug]), pick(tagPool[cat.slug]), pick(tagPool[cat.slug])])], featured: named[cat.slug].includes(title) });
+  }
 }
+// interleave categories by upload date
+const now = Date.UTC(2026, 10, 11, 12);
+[...pics.keys()].sort(() => rnd() - 0.5).forEach((i, k) => (pics[i].created_at = new Date(now - (k * 11 + int(0, 9)) * 3600e3).toISOString()));
+pics.sort((a, b) => b.created_at.localeCompare(a.created_at));
 
-// spread upload dates so categories are interleaved in "latest"
-const order = artworks.map((_, i) => i).sort(() => rnd() - 0.5);
-order.forEach((ai, k) => { artworks[ai].created_at = new Date(now - (k * 29 + int(0, 20)) * 3600 * 1000).toISOString(); });
+const out = pics.map((p) => ({ ...p, image_url: `samples/${p.slug}.svg`, creator: "PEPE.PICS Studio (sample)", is_sample: true, likes: 0 }));
+fs.mkdirSync(path.join(root, "data"), { recursive: true });
+fs.writeFileSync(path.join(root, "data/samples.json"), JSON.stringify(out));
 
-const collections = [
-  { slug: "the-original-pepe", title: "The Original Pepe", description: "Back to the pond: the classic faces and feelings.", match: (a) => a.category === "classic" },
-  { slug: "rare-pepe-archive", title: "Rare Pepe Archive", description: "Card-style pieces celebrating collecting culture.", match: (a) => a.category === "rare" },
-  { slug: "pepe-through-the-ages", title: "Pepe Through The Ages", description: "From classic to pixel to fine art — one frog, many eras.", match: (a) => ["classic", "pixel", "art"].includes(a.category) && a.tags.length % 2 === 0 },
-  { slug: "pepe-in-space", title: "Pepe in Space", description: "Orbits, nebulae and frogs far from home.", match: (a) => a.category === "space" },
-  { slug: "cyberpunk-pepe", title: "Cyberpunk Pepe", description: "Neon, chrome and glitches after midnight.", match: (a) => a.category === "cyber" },
-  { slug: "pixel-world", title: "Pixel World", description: "8-bit adventures and retro sprites.", match: (a) => a.category === "pixel" },
-  { slug: "anime-universe", title: "Anime Universe", description: "Speed lines, katanas and big feelings.", match: (a) => a.category === "anime" },
-  { slug: "crypto-culture", title: "Crypto Culture", description: "Internet money, chains and coin-shaped memes.", match: (a) => a.category === "crypto" || (a.category === "rare" && a.featured) },
-];
-const collOut = collections.map((c, i) => {
-  const items = artworks.filter(c.match).map((a) => a.slug);
-  return { slug: c.slug, title: c.title, description: c.description, display_order: i + 1, cover: items[0], artworks: items };
-});
-
-const catOut = categories.map((c, i) => ({ ...c, display_order: i + 1, cover: artworks.find((a) => a.category === c.slug).image_url }));
-
-fs.mkdirSync(path.join(root, "src/data"), { recursive: true });
-fs.writeFileSync(path.join(root, "src/data/seed.json"), JSON.stringify({ categories: catOut, collections: collOut, artworks }, null, 1));
-
-// ---------- seed.sql ----------
-const q = (v) => (v === null || v === undefined ? "null" : typeof v === "number" || typeof v === "boolean" ? String(v) : `'${String(v).replace(/'/g, "''")}'`);
-const arr = (a) => `array[${a.map(q).join(",")}]::text[]`;
-let sql = `-- Generated by scripts/generate-samples.mjs — SAMPLE placeholder content.\n-- Safe to re-run: uses ON CONFLICT on slugs.\n\n`;
-for (const c of catOut)
-  sql += `insert into public.categories (name, slug, description, cover_image, display_order) values (${q(c.name)}, ${q(c.slug)}, ${q(c.description)}, ${q(c.cover)}, ${c.display_order}) on conflict (slug) do update set name = excluded.name, description = excluded.description, cover_image = excluded.cover_image, display_order = excluded.display_order;\n`;
-sql += "\n";
-for (const a of artworks)
-  sql += `insert into public.artworks (title, slug, description, image_url, thumbnail_url, width, height, category_id, creator_name, creation_year, source_url, license_type, artwork_type, tags, status, featured, is_sample, allow_download, created_at) values (${q(a.title)}, ${q(a.slug)}, ${q(a.description)}, ${q(a.image_url)}, ${q(a.thumbnail_url)}, ${a.width}, ${a.height}, (select id from public.categories where slug = ${q(a.category)}), ${q(a.creator_name)}, null, null, ${q(a.license_type)}, ${q(a.artwork_type)}, ${arr(a.tags)}, 'approved', ${a.featured}, true, true, ${q(a.created_at)}) on conflict (slug) do nothing;\n`;
-sql += "\n";
-for (const c of collOut) {
-  sql += `insert into public.collections (title, slug, description, cover_image, display_order) values (${q(c.title)}, ${q(c.slug)}, ${q(c.description)}, ${q(artworks.find((a) => a.slug === c.cover)?.image_url ?? null)}, ${c.display_order}) on conflict (slug) do update set title = excluded.title, description = excluded.description, display_order = excluded.display_order;\n`;
-  for (const s of c.artworks)
-    sql += `insert into public.collection_artworks (collection_id, artwork_id) select c.id, a.id from public.collections c, public.artworks a where c.slug = ${q(c.slug)} and a.slug = ${q(s)} on conflict do nothing;\n`;
-}
+const q = (v) => `'${String(v).replace(/'/g, "''")}'`;
+const sql = `-- Generated by scripts/generate-samples.mjs — ${pics.length} SAMPLE placeholder pictures (safe to re-run)
+insert into public.pics (slug, title, category, image_url, width, height, tags, creator, status, featured, is_sample, created_at)
+select v.slug, v.title, v.cat, 'samples/' || v.slug || '.svg', v.w, v.h, v.tags, 'PEPE.PICS Studio (sample)', 'approved', v.f, true, v.d::timestamptz
+from (values
+${pics.map((p) => `(${q(p.slug)},${q(p.title)},${q(p.category)},${p.w},${p.h},array[${p.tags.map(q).join(",")}]::text[],${p.featured},${q(p.created_at)})`).join(",\n")}
+) v(slug, title, cat, w, h, tags, f, d)
+on conflict (slug) do nothing;
+`;
 fs.writeFileSync(path.join(root, "supabase/seed.sql"), sql);
-
-console.log(`Generated ${artworks.length} sample artworks, ${catOut.length} categories, ${collOut.length} collections.`);
+console.log(`Generated ${pics.length} sample pictures.`);
