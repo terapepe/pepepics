@@ -1,7 +1,3 @@
-/**
- * PEPE.PICS — all settings live here.
- * Edit this file (e.g. directly on GitHub) to change brand, token, CA, networks, mode, X account or Supabase.
- */
 window.PEPE_CONFIG = {
   brand: {
     name: "PEPE PICS",
@@ -13,18 +9,11 @@ window.PEPE_CONFIG = {
   token: {
     name: "PEPES",
     symbol: "PEPES",
-    /** One CA shared by all EVM networks (Robinhood, Base, BSC). Add later. */
     evmAddress: "",
-    /** Solana mint. Add later. */
     solanaMint: "",
   },
-
-  /**
-   * "multi"  → always shows Solana, Robinhood, Base, BSC (in multiOrder)
-   * "single" → shows only singleNetwork; token section uses that network's color & tagline
-   */
-  mode: "multi",
-  singleNetwork: "base",
+  mode: "single",
+  singleNetwork: "robinhood",
   multiOrder: ["solana", "robinhood", "base", "bsc"],
 
   networks: {
