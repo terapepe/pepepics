@@ -9,7 +9,7 @@ window.PEPE_CONFIG = {
   token: {
     name: "PEPES",
     symbol: "PEPES",
-    evmAddress: "",
+    evmAddress: "0xb64C21B47415DffFaDEAaf736eeAfacaD85f8C01",
     solanaMint: "",
   },
   mode: "single",
@@ -44,7 +44,7 @@ window.PEPE_CONFIG = {
   },
 
   social: {
-    x: "//https://x.com/PepeTheFrog//",
+    x: "https://x.com/PepeTheFrog/",
     xHandle: "@PepeTheFrog",
     telegram: "https://t.me/PepeTheFrog",
   },
