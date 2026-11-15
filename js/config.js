@@ -9,7 +9,7 @@ window.PEPE_CONFIG = {
   token: {
     name: "PEPES",
     symbol: "PEPES",
-    evmAddress: "0xb64C21B47415DffFaDEAaf736eeAfacaD85f8C01",
+    evmAddress: "",
     solanaMint: "",
   },
   mode: "single",
